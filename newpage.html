@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Teeth Falling Animation</title>
+    <style>
+        body {
+            background-image: url('babymouth.png'); /* Set the background image */
+            background-size: cover; /* Ensure the background image covers the entire screen */
+            background-position: center; /* Center the background image */
+            overflow: hidden; /* Prevent scrolling */
+            position: relative;
+            margin: 0;
+            height: 100vh; /* Ensure body takes up the full height of the viewport */
+        }
+
+        .tooth-container {
+            position: absolute;
+            text-align: center;
+            animation: fall 5s forwards; /* Make the tooth fall continuously */
+            z-index: 1;
+        }
+
+        .tooth {
+            width: 200px; /* Adjust size of teeth */
+            display: block;
+            margin: 0 auto;
+        }
+
+        /* Define the falling animation */
+        @keyframes fall {
+            0% {
+                opacity: 1;
+                transform: translateY(0); /* Start at the initial Y position */
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(100vh); /* End at the bottom of the page */
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <script>
+        function getRandomPosition(maxWidth, maxHeight, imgWidth, imgHeight) {
+            // Random horizontal and vertical positions within the screen
+            const x = Math.random() * (maxWidth - imgWidth);
+            const y = Math.random() * (maxHeight - imgHeight);
+            return { x, y };
+        }
+
+        function createRandomTooth() {
+            const isBabyTooth = Math.random() > 0.5;
+            const src = isBabyTooth ? "babytooth.png" : "tooth2.png";
+
+            // Create container for tooth only (no label)
+            const toothContainer = document.createElement("div");
+            toothContainer.classList.add("tooth-container");
+
+            // Create tooth image
+            const tooth = document.createElement("img");
+            tooth.src = src;
+            tooth.classList.add("tooth");
+
+            // Get random position inside the screen
+            const { x, y } = getRandomPosition(window.innerWidth, window.innerHeight, 200, 200); // Adjust for the size of the tooth
+            toothContainer.style.left = `${x}px`;
+            toothContainer.style.top = `${y}px`;
+
+            // Add tooth image to container
+            toothContainer.appendChild(tooth);
+
+            // Add tooth to body
+            document.body.appendChild(toothContainer);
+
+            // Remove the tooth after animation completes
+            toothContainer.addEventListener('animationend', () => {
+                toothContainer.remove();
+            });
+        }
+
+        function spawnTeeth() {
+            const numTeeth = Math.floor(Math.random() * 4) + 2; // Spawn 2-5 teeth at a time (fewer teeth)
+            for (let i = 0; i < numTeeth; i++) {
+                createRandomTooth();
+            }
+        }
+
+        // Spawn teeth every 2 seconds (slower spawn rate to reduce glitches)
+        setInterval(spawnTeeth, 2000);
+
+        // Add a click event listener to the body to redirect to index.html
+        document.body.addEventListener('click', function() {
+            window.location.href = "index.html"; // Redirect to index.html
+        });
+    </script>
+
+</body>
+</html>
